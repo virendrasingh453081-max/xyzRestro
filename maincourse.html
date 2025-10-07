@@ -26,6 +26,7 @@
   .muted{color:var(--muted)}
   .cart-fab{position:fixed;right:18px;bottom:18px;background:linear-gradient(45deg,var(--accent),#ff7b7f);color:white;padding:12px 16px;border-radius:999px;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,0.18);z-index:60;cursor:pointer}
   #cartDrawer{display:none;position:fixed;right:0;bottom:0;top:0;width:420px;max-width:95%;background:white;box-shadow:-10px 0 40px rgba(0,0,0,0.2);z-index:80;padding:18px;overflow:auto}
+  @media (max-width:600px){ .qty button{flex:0 0 30px} }
 </style>
 </head>
 <body>
@@ -54,12 +55,14 @@
   <div class="grid" id="menuGrid"></div>
 </main>
 
+<!-- Floating cart -->
 <div class="cart-fab" id="cartFab" onclick="openCart()">
   <div style="font-weight:800">Cart</div>
   <div class="count" id="cartCount">0</div>
   <div id="cartTotal" style="font-weight:700">₹0</div>
 </div>
 
+<!-- Cart Drawer -->
 <div id="cartDrawer">
   <div style="display:flex;justify-content:space-between;align-items:center">
     <h3 style="margin:0">Your Cart</h3>
@@ -87,6 +90,32 @@ const menuItems = [
 ];
 const CART_KEY = 'xyz_cart';
 
+/* --- Toast Notification --- */
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.position = 'fixed';
+  toast.style.bottom = '20px';
+  toast.style.right = '20px';
+  toast.style.background = '#333';
+  toast.style.color = '#fff';
+  toast.style.padding = '10px 20px';
+  toast.style.borderRadius = '8px';
+  toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+  toast.style.zIndex = '9999';
+  toast.style.opacity = '0';
+  toast.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+  toast.style.transform = 'translateY(20px)';
+  document.body.appendChild(toast);
+  setTimeout(()=>{toast.style.opacity='1';toast.style.transform='translateY(0)';},100);
+  setTimeout(()=>{
+    toast.style.opacity='0';
+    toast.style.transform='translateY(20px)';
+    setTimeout(()=>toast.remove(),400);
+  },2000);
+}
+
+/* Render Menu */
 function renderMenu(){
   const grid = document.getElementById('menuGrid');
   grid.innerHTML = '';
@@ -120,10 +149,16 @@ function changeLocalQty(btn, delta){
   input.value = v;
 }
 
-/* cart helpers */
+/* Cart Helpers */
 function getCart(){ try{return JSON.parse(localStorage.getItem(CART_KEY) || '[]');}catch(e){return [];} }
 function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartFab(); }
-function updateCartFab(){ const cart = getCart(); let count=0,total=0; cart.forEach(i=>{count+=i.qty; total+=i.qty*i.price}); document.getElementById('cartCount').textContent=count; document.getElementById('cartTotal').textContent='₹'+total.toFixed(2); }
+function updateCartFab(){
+  const cart = getCart();
+  let count=0,total=0;
+  cart.forEach(i=>{count+=i.qty; total+=i.qty*i.price});
+  document.getElementById('cartCount').textContent=count;
+  document.getElementById('cartTotal').textContent='₹'+total.toFixed(2);
+}
 
 function addToCart(itemId){
   const item = menuItems.find(m=>m.id===itemId);
@@ -136,10 +171,10 @@ function addToCart(itemId){
   else cart.push({ id:item.id, name:item.name, price:item.price, qty:qty });
   saveCart(cart);
   card.querySelector('input').value = 1;
-  alert(item.name + ' added to cart');
+  showToast('✅ ' + item.name + ' added to cart');
 }
 
-/* cart drawer */
+/* Cart Drawer */
 function openCart(){ renderCart(); document.getElementById('cartDrawer').style.display='block'; }
 function closeCart(){ document.getElementById('cartDrawer').style.display='none'; }
 function renderCart(){
@@ -171,13 +206,13 @@ function removeFromCart(index){ const cart = getCart(); cart.splice(index,1); sa
 
 function checkout(){
   const cart = getCart();
-  if(cart.length===0){ alert('Cart is empty'); return; }
+  if(cart.length===0){ showToast('⚠️ Cart is empty'); return; }
   const lines=[]; lines.push('Order from XYZ RESTAURANT'); lines.push('Table: X'); lines.push('----');
   let subtotal=0;
   cart.forEach(i=>{ lines.push(`${i.name} x ${i.qty} - ₹${(i.price*i.qty).toFixed(2)}`); subtotal += i.qty * i.price;});
   lines.push('----'); lines.push('Subtotal: ₹' + subtotal.toFixed(2)); lines.push('(Amount displayed WITHOUT GST)');
   const message = encodeURIComponent(lines.join('\n'));
-  const waNumber = '918078618395';
+  const waNumber = '91XXXXXXXXXX'; // replace with your actual number
   window.open('https://wa.me/' + waNumber + '?text=' + message, '_blank');
 }
 

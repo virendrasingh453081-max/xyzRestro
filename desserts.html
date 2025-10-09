@@ -8,9 +8,37 @@
   :root{--accent:#ff5a5f;--muted:#666;--card-bg:rgba(255,255,255,0.95);--radius:12px;--shadow:0 6px 20px rgba(2,6,23,0.12)}
   body{margin:0;font-family:Inter,system-ui,Arial;background:#fafafa;color:#111}
   body::before{content:"";position:fixed;inset:0;background:url('background.png') center/cover no-repeat;opacity:0.12;pointer-events:none;z-index:0}
-  header{display:flex;align-items:center;gap:12px;padding:12px 16px;position:sticky;top:0;background:linear-gradient(90deg,rgba(255,255,255,0.7),rgba(255,255,255,0.5));backdrop-filter:blur(6px);z-index:10}
-  .brand{font-weight:800}
-  nav a{margin-left:12px;text-decoration:none;color:var(--muted);font-weight:700}
+  
+  /* --- Updated Header Only --- */
+  header {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 20px;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    z-index: 10;
+  }
+  header button {
+    background: white;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  header button:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,90,95,0.3);
+  }
+
   .container{max-width:1100px;margin:18px auto;padding:0 16px;position:relative;z-index:2}
   .page-title{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px}
@@ -29,15 +57,14 @@
 </style>
 </head>
 <body>
+
+<!-- 🌟 Only header changed -->
 <header>
-  <div class="brand">XYZ RESTAURANT</div>
-  <nav style="margin-left:auto">
-    <a href="index.html">Home</a>
-    <a href="starters.html">Starters</a>
-    <a href="maincourse.html">Main Course</a>
-    <a href="desserts.html">Desserts</a>
-    <a href="drinks.html">Drinks</a>
-  </nav>
+  <button onclick="location.href='index.html'">Home</button>
+  <button onclick="location.href='starters.html'">Starters</button>
+  <button onclick="location.href='maincourse.html'">Main Course</button>
+  <button onclick="location.href='desserts.html'">Desserts</button>
+  <button onclick="location.href='drinks.html'">Drinks</button>
 </header>
 
 <main class="container">
@@ -78,7 +105,7 @@
 </div>
 
 <script>
-/* Editable dessert items */
+/* Same JS as before */
 const menuItems = [
   { id:'d1', name:'Gulab Jamun', price:90, desc:'Soft warm dumplings in sugar syrup' },
   { id:'d2', name:'Chocolate Brownie', price:130, desc:'Fudgy brownie served with ice cream' },
@@ -127,7 +154,6 @@ function updateCartFab(){
   document.getElementById('cartTotal').textContent='₹'+total.toFixed(2);
 }
 
-/* Toast notification */
 function showToast(message) {
   const toast = document.createElement('div');
   toast.textContent = message;

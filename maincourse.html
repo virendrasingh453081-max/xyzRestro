@@ -187,7 +187,7 @@ function checkout(){
   c.forEach(i=>{lines.push(`${i.name} x ${i.qty} - ₹${(i.price*i.qty).toFixed(2)}`);s+=i.qty*i.price;});
   lines.push('----','Subtotal: ₹'+s.toFixed(2),'(Amount displayed WITHOUT GST)');
   const msg=encodeURIComponent(lines.join('\n'));
-  const wa='91XXXXXXXXXX';
+  const wa='918078618395';
   window.open('https://wa.me/'+wa+'?text='+msg,'_blank');
 }
 
@@ -206,3 +206,4 @@ renderMenu();updateCartFab();
 </script>
 </body>
 </html>
+

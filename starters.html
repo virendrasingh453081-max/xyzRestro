@@ -259,7 +259,7 @@ function checkout(){
   cart.forEach(i=>{lines.push(`${i.name} x ${i.qty} - ₹${(i.price*i.qty).toFixed(2)}`); subtotal+=i.qty*i.price;});
   lines.push('----'); lines.push('Subtotal: ₹'+subtotal.toFixed(2)); lines.push('(Amount displayed WITHOUT GST)');
   const msg=encodeURIComponent(lines.join('\n'));
-  const waNumber='91XXXXXXXXXX';
+  const waNumber='918078618395';
   window.open('https://wa.me/'+waNumber+'?text='+msg,'_blank');
 }
 
@@ -269,3 +269,4 @@ renderMenu(); updateCartFab();
 </script>
 </body>
 </html>
+
